@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A library to parse \"attachment\"s in Content-Disposition.",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "directories": {
     "test": "test"
   },
