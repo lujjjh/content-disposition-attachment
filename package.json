@@ -1,0 +1,34 @@
+{
+  "name": "content-disposition-attachment",
+  "version": "0.1.0",
+  "description": "A library to parse \"attachment\"s in Content-Disposition.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lujjjh/content-disposition-attachment.git"
+  },
+  "keywords": [
+    "content-disposition",
+    "attachment",
+    "browser"
+  ],
+  "author": "lujjjh <lujjjh@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lujjjh/content-disposition-attachment/issues"
+  },
+  "homepage": "https://github.com/lujjjh/content-disposition-attachment#readme",
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "rollup": "^0.55.3",
+    "standard": "^10.0.3"
+  }
+}
