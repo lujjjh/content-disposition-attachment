@@ -154,3 +154,45 @@ t.attandinline2`attachment; inline; filename=foo.html`(/^expect '='$/)
 // 'attachment', specifying a filename parameter that is broken (missing ending double quote).
 // This is invalid syntax.
 t.attbrokenquotedfn2`attachment; filename="bar`(/^expect '"'$/)
+
+// 'attachment', specifying a filename of foo-ä.html, using RFC2231/5987 encoded ISO-8859-1
+t.attwithisofn2231iso`attachment; filename*=iso-8859-1''foo-%E4.html`({
+  attachment: true,
+  filename: 'foo-ä.html'
+})
+
+// 'attachment', specifying a filename of foo-ä-€.html, using RFC2231/5987 encoded UTF-8
+t.attwithfn2231utf8`attachment; filename*=UTF-8''foo-%c3%a4-%e2%82%ac.html`({
+  attachment: true,
+  filename: 'foo-ä-€.html'
+})
+
+// 'attachment', specifying a filename of foo-ä.html, using RFC2231 encoded UTF-8, but choosing
+// the decomposed form(lowercase a plus COMBINING DIAERESIS)-- on a Windows target system,
+// this should be translated to the preferred Unicode normal form(composed).
+t.attwithfn2231utf8comp`attachment; filename*=UTF-8''foo-a%cc%88.html`({
+  attachment: true,
+  filename: 'foo-ä.html'
+})
+
+// 'attachment', specifying a filename of foo-ä-€.html, using RFC2231 encoded UTF-8,
+// but declaring ISO-8859-1
+t['attwithfn2231utf8-bad']`attachment; filename*=iso-8859-1''foo-%c3%a4-%e2%82%ac.html`(/^invalid iso-8859-1 string$/)
+
+// 'attachment', specifying a filename of foo-ä.html, using RFC2231 encoded ISO-8859-1,
+// but declaring UTF-8
+t['attwithfn2231iso-bad']`attachment; filename*=utf-8''foo-%E4.html`(/^invalid utf-8 string$/)
+
+// 'attachment', specifying a filename of foo-ä.html, using RFC2231 encoded UTF-8,
+// with whitespace after "*="
+t.attwithfn2231ws2`attachment; filename*= UTF-8''foo-%c3%a4.html`({
+  attachment: true,
+  filename: 'foo-ä.html'
+})
+
+// 'attachment', specifying a filename of foo-ä.html, using RFC2231 encoded UTF-8,
+// with whitespace inside "* ="
+t.attwithfn2231ws3`attachment; filename* =UTF-8''foo-%c3%a4.html`({
+  attachment: true,
+  filename: 'foo-ä.html'
+})

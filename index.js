@@ -34,6 +34,11 @@ class Parser {
     return this.eat$0(/^\s*/)
   }
 
+  // handle attachment only
+  parseAttachment () {
+    return this.eat$0(/^attachment/i)
+  }
+
   // CHAR           = <any US-ASCII character (octets 0 - 127)>
   // CTL            = <any US-ASCII control character
   //                  (octets 0 - 31) and DEL (127)>
@@ -68,9 +73,47 @@ class Parser {
     return this.parseToken() || this.parseQuotedString()
   }
 
-  // handle attachment only
-  parseAttachment () {
-    return this.eat$0(/^attachment/i)
+  // value-chars   = *( pct-encoded / attr-char )
+  //
+  // pct-encoded   = "%" HEXDIG HEXDIG
+  //               ; see [RFC3986], Section 2.1
+  //
+  // attr-char     = ALPHA / DIGIT
+  //               / "!" / "#" / "$" / "&" / "+" / "-" / "."
+  //               / "^" / "_" / "`" / "|" / "~"
+  //               ; token except ( "*" / "'" / "%" )
+  parseValueChars (charset) {
+    let value = this.expect(this.eat$0(/^(?:%[0-9a-fA-F]{2}|[\w!#$&+\-.^`|~])*/), 'expect value-chars')
+    switch (charset.toLowerCase()) {
+      case 'utf-8':
+        try {
+          value = decodeURIComponent(value)
+        } catch (error) {
+          this.expect(false, 'invalid utf-8 string')
+        }
+        break
+      case 'iso-8859-1':
+        value = value.replace(/%([0-9a-fA-F]{2})/g, ($0, hex) => String.fromCharCode(parseInt(hex, 16)))
+        this.expect(!/[^\x20-\x7e\xa0-\xff]/.test(value), 'invalid iso-8859-1 string')
+        break
+    }
+    return value
+  }
+
+  // ext-value     = charset  "'" [ language ] "'" value-chars
+  //               ; like RFC 2231's <extended-initial-value>
+  //               ; (see [RFC2231], Section 7)
+  //
+  // charset       = "UTF-8" / "ISO-8859-1" / mime-charset
+  // language      = 2*3ALPHA            ; shortest ISO 639 code
+  //                 ["-" extlang]       ; sometimes followed by
+  //                                     ; extended language subtags
+  //               / 4ALPHA              ; or reserved for future use
+  //               / 5*8ALPHA            ; or registered language subtag
+  parseExtValue () {
+    const charset = this.expect(this.eat$0(/^(?:UTF-8|ISO-8859-1)/i), 'unsupported charset')
+    this.expect(this.eat$0(/^'[a-zA-Z-]*'/), `expect ' [ language ] '`)
+    return this.parseValueChars(charset)
   }
 
   // disposition-parm    = filename-parm | disp-ext-parm
@@ -81,12 +124,15 @@ class Parser {
   // disp-ext-parm       = token "=" value
   //                     | ext-token "=" ext-value
   parseParm () {
-    const key = this.expect(this.parseToken(), 'expect token')
-    const ext = !!this.eat$0(/^\*/)
+    let key = this.expect(this.parseToken(), 'expect token')
     this.expect(this.eat$0(/^\s*=\s*/), `expect '='`)
-    const value = ext
-      ? this.expect(this.parseExtValue(), 'expect ext-value')
-      : this.expect(this.parseValue(), 'expect value')
+    let value
+    if (/\*$/.test(key)) {
+      key = key.slice(0, -1)
+      value = this.expect(this.parseExtValue(), 'expect ext-value')
+    } else {
+      value = this.expect(this.parseValue(), 'expect value')
+    }
     return { key, value }
   }
 
