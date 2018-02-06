@@ -19,7 +19,7 @@ npm install content-disposition-attachment
 If Content-Disposition is not "attachment", it returns `{ attachment: false }`;
 otherwise, it returns `{ attachment: true }` along with parsed parameters.
 
-If errors occur when parsing parameters, an `ParseError` will be thrown.
+If errors occur when parsing parameters, a `ParseError` will be thrown.
 
 **Examples**
 
