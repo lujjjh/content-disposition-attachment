@@ -1,23 +1,23 @@
 class ParseError extends Error {
-  constructor(message) {
+  constructor (message) {
     super(message)
     Error.captureStackTrace(this, ParseError)
   }
 }
 
 class Parser {
-  constructor(code) {
+  constructor (code) {
     this.code = code
   }
 
-  expect(value, message) {
+  expect (value, message) {
     if (!value) {
       throw new ParseError(message)
     }
     return value
   }
 
-  eat(pattern) {
+  eat (pattern) {
     const match = pattern.exec(this.chunk)
     if (!match) {
       return []
@@ -26,11 +26,11 @@ class Parser {
     return match
   }
 
-  eat$0(pattern) {
+  eat$0 (pattern) {
     return this.eat(pattern)[0]
   }
 
-  eatSpaces() {
+  eatSpaces () {
     return this.eat$0(/^\s*/)
   }
 
@@ -42,8 +42,8 @@ class Parser {
   //                | "," | ";" | ":" | "\" | <">
   //                | "/" | "[" | "]" | "?" | "="
   //                | "{" | "}" | SP | HT
-  parseToken() {
-    return this.eat$0(/^[!#\$%&'*+\-.\w^`|~]+/)
+  parseToken () {
+    return this.eat$0(/^[!#$%&'*+\-.\w^`|~]+/)
   }
 
   // quoted-string  = ( <"> *(qdtext | quoted-pair ) <"> )
@@ -54,22 +54,22 @@ class Parser {
   // OCTET          = <any 8-bit sequence of data>
   // CRLF           = CR LF
   // LWS            = [CRLF] 1*( SP | HT )
-  parseQuotedString() {
+  parseQuotedString () {
     if (!this.eat$0(/^"/)) {
       return
     }
-    const result = this.eat$0(/^(:?([ !\x23-\x5b\x5d-\x7e\x80-\xff]|\r\n(?:[ \t])+)*|\\[\x00-\x7F])*/)
+    const result = this.eat$0(/^(:?([ !\x23-\x5b\x5d-\x7e\x80-\xff]|\r\n(?:[ \t])+)*|\\[\u0000-\u007f])*/)
     this.expect(this.eat$0(/^"/), `expect '"'`)
-    return result.replace(/\\([\x00-\x7F])/g, '$1')
+    return result.replace(/\\([\u0000-\u007f])/g, '$1')
   }
 
   // value          = token | quoted-string
-  parseValue() {
+  parseValue () {
     return this.parseToken() || this.parseQuotedString()
   }
 
   // handle attachment only
-  parseAttachment() {
+  parseAttachment () {
     return this.eat$0(/^attachment/i)
   }
 
@@ -80,7 +80,7 @@ class Parser {
   //
   // disp-ext-parm       = token "=" value
   //                     | ext-token "=" ext-value
-  parseParm() {
+  parseParm () {
     const key = this.expect(this.parseToken(), 'expect token')
     const ext = !!this.eat$0(/^\*/)
     this.expect(this.eat$0(/^\s*=\s*/), `expect '='`)
@@ -92,7 +92,7 @@ class Parser {
 
   // content-disposition = "Content-Disposition" ":"
   //                        disposition-type *( ";" disposition-parm )
-  parse() {
+  parse () {
     this.chunk = String(this.code)
     if (!this.parseAttachment()) {
       return { attachment: false }
