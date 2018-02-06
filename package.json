@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test": "ava"
+    "test": "standard && ava"
   },
   "repository": {
     "type": "git",
