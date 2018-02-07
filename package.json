@@ -1,6 +1,6 @@
 {
   "name": "content-disposition-attachment",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library to parse \"attachment\"s in Content-Disposition.",
   "main": "index.js",
   "files": [
