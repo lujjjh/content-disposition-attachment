@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/lujjjh/content-disposition-attachment#readme",
   "devDependencies": {
-    "ava": "^0.25.0",
+    "ava": "^3.13.0",
     "rollup": "^0.55.3",
-    "standard": "^10.0.3"
+    "standard": "^14.3.4"
   }
 }

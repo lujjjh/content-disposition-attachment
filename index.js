@@ -63,8 +63,10 @@ class Parser {
     if (!this.eat$0(/^"/)) {
       return
     }
+    // eslint-disable-next-line
     const result = this.eat$0(/^(:?([ !\x23-\x5b\x5d-\x7e\x80-\xff]|\r\n(?:[ \t])+)*|\\[\u0000-\u007f])*/)
-    this.expect(this.eat$0(/^"/), `expect '"'`)
+    this.expect(this.eat$0(/^"/), 'expect \'"\'')
+    // eslint-disable-next-line
     return result.replace(/\\([\u0000-\u007f])/g, '$1')
   }
 
@@ -112,7 +114,7 @@ class Parser {
   //               / 5*8ALPHA            ; or registered language subtag
   parseExtValue () {
     const charset = this.expect(this.eat$0(/^(?:UTF-8|ISO-8859-1)/i), 'unsupported charset')
-    this.expect(this.eat$0(/^'[a-zA-Z-]*'/), `expect ' [ language ] '`)
+    this.expect(this.eat$0(/^'[a-zA-Z-]*'/), 'expect \' [ language ] \'')
     return this.parseValueChars(charset)
   }
 
@@ -125,7 +127,7 @@ class Parser {
   //                     | ext-token "=" ext-value
   parseParm () {
     let key = this.expect(this.parseToken(), 'expect token')
-    this.expect(this.eat$0(/^\s*=\s*/), `expect '='`)
+    this.expect(this.eat$0(/^\s*=\s*/), 'expect \'=\'')
     let value
     if (/\*$/.test(key)) {
       key = key.slice(0, -1)

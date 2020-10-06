@@ -1,5 +1,5 @@
-import test from 'ava'
-import { parse, ParseError } from '../index.js'
+const test = require('ava')
+const { parse, ParseError } = require('..')
 
 const keySet = new Set()
 
@@ -13,7 +13,7 @@ const t = new Proxy(Object.create(null), {
     return strings => expected => test(key, t => {
       const parseInput = () => parse(strings.raw[0])
       if (expected instanceof RegExp) {
-        const error = t.throws(parseInput, ParseError, 'should throw a ParseError')
+        const error = t.throws(parseInput, { instanceOf: ParseError }, 'should throw a ParseError')
         t.regex(error.message, expected)
       } else {
         t.deepEqual(parseInput(), expected)
