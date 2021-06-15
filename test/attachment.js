@@ -196,3 +196,15 @@ t.attwithfn2231ws3`attachment; filename* =UTF-8''foo-%c3%a4.html`({
   attachment: true,
   filename: 'foo-ä.html'
 })
+
+// 'attachment', specifying a filename of foo-ae.html in the traditional format, and foo-ä.html in RFC2231 format.
+t.attfnboth`attachment; filename="foo-ae.html"; filename*=UTF-8''foo-%c3%a4.html`({
+  attachment: true,
+  filename: 'foo-ä.html'
+})
+
+// 'attachment', specifying a filename of foo-ae.html in the traditional format, and foo-ä.html in RFC2231 format.
+t.attfnboth2`attachment; filename*=UTF-8''foo-%c3%a4.html; filename="foo-ae.html"`({
+  attachment: true,
+  filename: 'foo-ä.html'
+})
