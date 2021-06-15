@@ -126,15 +126,11 @@ class Parser {
   // disp-ext-parm       = token "=" value
   //                     | ext-token "=" ext-value
   parseParm () {
-    let key = this.expect(this.parseToken(), 'expect token')
+    const key = this.expect(this.parseToken(), 'expect token')
     this.expect(this.eat$0(/^\s*=\s*/), 'expect \'=\'')
-    let value
-    if (/\*$/.test(key)) {
-      key = key.slice(0, -1)
-      value = this.expect(this.parseExtValue(), 'expect ext-value')
-    } else {
-      value = this.expect(this.parseValue(), 'expect value')
-    }
+    const value = /\*$/.test(key)
+      ? this.expect(this.parseExtValue(), 'expect ext-value')
+      : this.expect(this.parseValue(), 'expect value')
     return { key, value }
   }
 
@@ -146,18 +142,26 @@ class Parser {
       return { attachment: false }
     }
     const result = { attachment: true }
+    const exts = {}
     this.eatSpaces()
     while (this.eat$0(/^;/)) {
       this.eatSpaces()
+      let target = result
       let { key, value } = this.parseParm()
-      if (/^filename$/i.test(key)) {
-        key = 'filename'
+      if (/\*$/.test(key)) {
+        key = key.slice(0, -1)
+        target = exts
       }
-      if (key in result) {
+      // strangely, RFC6266 does not mention if disposition parameters
+      // other than "filename" and "filename*" should be matched case-insensitively
+      if (/^filename$/i.test(key)) key = key.toLowerCase()
+      if (key in target) {
         throw new ParseError(`duplicated field '${key}'`)
       }
-      result[key] = value
+      target[key] = value
     }
+    // always prefers "exts"
+    Object.assign(result, exts)
     if (this.chunk.length) {
       throw new ParseError('expect EOF')
     }
