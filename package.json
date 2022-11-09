@@ -17,12 +17,14 @@
       "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json",
+    "./index": "./index.js",
     "./index.js": "./index.js"
   },
   "files": [
     "LICENSE",
     "README.md",
-    "dist/"
+    "dist/",
+    "index.js"
   ],
   "scripts": {
     "lint": "prettier -c src",
