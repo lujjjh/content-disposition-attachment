@@ -5,6 +5,9 @@ export class ParseError extends Error {
     if ('captureStackTrace' in Error) {
       (Error as unknown as any).captureStackTrace(this, ParseError);
     }
+
+    // TODO: breaking change
+    // this.name = 'ParseError';
   }
 }
 
