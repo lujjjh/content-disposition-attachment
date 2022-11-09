@@ -9,10 +9,15 @@
   "jsdelivr": "dist/umd/index.js",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
+      "import": {
+        "node": "./dist/esm/index.mjs",
+        "default": "./dist/esm/index.js"
+      },
       "require": "./dist/cjs/index.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./package.json": "./package.json",
+    "./index.js": "./index.js"
   },
   "files": [
     "LICENSE",
@@ -23,12 +28,12 @@
     "lint": "prettier -c src",
     "lint:fix": "prettier src",
     "build": "npm run build:esm && npm run build:cjs && npm run build:umd && npm run build:umd:min && npm run build:types",
-    "build:esm": "tsc --module es2015 --target es2015 --outDir dist/esm",
+    "build:esm": "tsc --module es2015 --target es2015 --outDir dist/esm && cp dist/esm/index.js dist/esm/index.mjs",
     "build:cjs": "tsc --module commonjs --target es2015 --outDir dist/cjs",
     "build:umd": "rollup dist/esm/index.js --format umd --name ContentDispositionAttachment --sourcemap --file dist/umd/index.js",
     "build:umd:min": "cd dist/umd && terser index.js --compress --mangle --source-map --comments --output index.min.js",
     "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
-    "test": "npm run build && ava"
+    "test": "ava"
   },
   "repository": {
     "type": "git",

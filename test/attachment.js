@@ -1,5 +1,5 @@
 const test = require('ava');
-const { parse, ParseError } = require('..');
+const { parse, ParseError } = require('content-disposition-attachment');
 
 const keySet = new Set();
 
