@@ -4,13 +4,56 @@
 
 > A library to parse "attachment"s in Content-Disposition.
 
-## Installation
+## Getting started
+
+### Install via npm
 
 ```sh
 npm install content-disposition-attachment
 ```
 
-## Getting Started
+#### ESM
+
+```js
+import { parse } from 'content-disposition-attachment';
+
+console.log(parse('attachment; filename=foo.html'));
+// => { attachment: true, filename: 'foo.html' }
+```
+
+#### CommonJS
+
+```js
+const { parse } = require('content-disposition-attachment');
+
+console.log(parse('attachment; filename=foo.html'));
+// => { attachment: true, filename: 'foo.html' }
+```
+
+### Import from CDN
+
+#### UMD
+
+```html
+<script src="https://unpkg.com/content-disposition-attachment@0.3"></script>
+<script>
+  console.log(ContentDispositionAttachment.parse('attachment; filename="foo.html"'));
+  // => { attachment: true, filename: 'foo.html' }
+</script>
+```
+
+#### ESM
+
+```html
+<script type="module">
+  import { parse } from 'https://unpkg.com/content-disposition-attachment@0.3?module';
+
+  console.log(parse('attachment; filename=foo.html'));
+  // => { attachment: true, filename: 'foo.html' }
+</script>
+```
+
+## API references
 
 ### parse
 
@@ -26,14 +69,14 @@ If errors occur when parsing parameters, a `ParseError` will be thrown.
 ```js
 import { parse } from 'content-disposition-attachment';
 
-parse('inline')
+parse('inline');
 // => { attachment: false }
 
-parse('attachment; filename=foo.html; foo=bar')
+parse('attachment; filename=foo.html; foo=bar');
 // => { attachment: true, filename: 'foo.html', foo: 'bar' }
 
-parse('attachment; foo')
+parse('attachment; foo');
 // => ParseError: expect '='
 ```
 
-You can find more examples in the [examples directory](examples/) and the [unit tests](test/).
+You can find more examples in the [unit tests](test/parse.js).
