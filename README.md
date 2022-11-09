@@ -24,14 +24,16 @@ If errors occur when parsing parameters, a `ParseError` will be thrown.
 **Examples**
 
 ```js
-const ContentDispositionAttachment = require('content-disposition-attachment')
+import { parse } from 'content-disposition-attachment';
 
-ContentDispositionAttachment.parse('inline')
+parse('inline')
 // => { attachment: false }
 
-ContentDispositionAttachment.parse('attachment; filename=foo.html; foo=bar')
+parse('attachment; filename=foo.html; foo=bar')
 // => { attachment: true, filename: 'foo.html', foo: 'bar' }
 
-ContentDispositionAttachment.parse('attachment; foo')
-// => ContentDispositionAttachment.ParseError: expect '='
+parse('attachment; foo')
+// => ParseError: expect '='
 ```
+
+You can find more examples in the [examples directory](examples/) and the [unit tests](test/).
