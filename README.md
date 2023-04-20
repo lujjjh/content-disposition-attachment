@@ -1,6 +1,8 @@
 # content-disposition-attachment
 
-[![Build Status](https://img.shields.io/travis/lujjjh/content-disposition-attachment/master.svg?style=flat-square)](https://travis-ci.org/lujjjh/content-disposition-attachment)
+[![npm](https://img.shields.io/npm/v/content-disposition-attachment)](https://www.npmjs.com/package/content-disposition-attachment)
+![npm bundle size](https://img.shields.io/bundlephobia/min/content-disposition-attachment)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/lujjjh/content-disposition-attachment/ci.yml)
 
 > A library to parse "attachment"s in Content-Disposition.
 
